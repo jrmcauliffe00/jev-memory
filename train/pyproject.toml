@@ -1,0 +1,10 @@
+[project]
+name = "jev-memory-train"
+version = "0.1.0"
+description = "Minimal Together fine-tune shell for the Jev memory-write classifier"
+requires-python = ">=3.12"
+dependencies = [
+  "together==2.23.0",
+  "transformers==5.17.0",
+  "jinja2>=3.1,<4",
+]

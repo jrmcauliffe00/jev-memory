@@ -1,8 +1,6 @@
-export { createResearchHarness, createCitationReviewHarness } from './agent.js';
 export { JevMemoryStore } from './memoryStore.js';
-export { evolvePolicy } from './evolve.js';
-export { getRepo } from './repo.js';
-export { issueGuidanceBrief } from './tools/guidanceBrief.js';
-export { reviewPaperCitations } from './tools/citationReview.js';
-export { classify, classifyDetailed, gateMemory, checkContradiction, judgeReward } from './jev.js';
-export type { Option } from './jev.js';
+export { getRepo, clearRepoCache } from './repo.js';
+export { classify, classifyDetailed, gateMemory, checkContradiction, JEV_SYSTEM } from './jev.js';
+export type { Option, ClassifyResult } from './jev.js';
+export type { IngestMeta, IngestResult, SearchHit } from './memoryStore.js';
+export type { Memory, Policy, Trace, EvidenceLevel } from './types.js';

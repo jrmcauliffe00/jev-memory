@@ -1,0 +1,11 @@
+{
+  "state": {
+    "new_finding": "Early introduction of peanut in infancy reduces the risk of developing peanut allergy.",
+    "existing_finding": "Avoid introducing peanut-containing foods to infants; early exposure may increase allergy risk."
+  },
+  "question": "Does the new finding contradict the existing stored finding?",
+  "options": [
+    { "label": "A", "key": "yes", "description": "Yes." },
+    { "label": "B", "key": "no", "description": "No." }
+  ]
+}

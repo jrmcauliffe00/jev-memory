@@ -1,39 +1,22 @@
-# Dependencies
 node_modules/
 
-# Jev classifier builder — a separate cloned repo (github.com/togethercomputer/tev1),
-# owned/maintained by the parallel Jev fine-tuning process. Not part of this app's history.
-tev1/
-
-# Secrets / local env
+# Secrets
 .env
 .env.*
 !.env.example
 
-# Build output
+# Build
 dist/
 build/
 *.tsbuildinfo
 
-# Strands harness local state (sessions, file memory, skills)
-.agent/
-
-# Cached Hugging Face / PubMedQA downloads (regenerable)
-data/cache/
-
-# Local Jev weights + MLX venv (Together fine-tune served on-device)
+# Fine-tune artifacts (regenerable)
+train/.venv/
+train/.cache/
+train/data/instruction/
 models/
-scripts/
 
-# Logs & misc
+# Logs
 *.log
 npm-debug.log*
 .DS_Store
-
-# Internal planning — not part of the shipped repo
-PLAN.md
-
-# Local-only demo script + slides (do not push)
-_local-demo/
-DEMO.md
-how-it-works.html

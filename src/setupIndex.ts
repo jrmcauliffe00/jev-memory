@@ -1,9 +1,6 @@
 /**
- * Create the Atlas Vector Search index on `jev.memories` (PLAN §7.2). Idempotent: skips create if
- * it already exists, then waits until the index is READY so `$vectorSearch` will not fail.
- *
- * Run once after creating the cluster: `npm run setup:index`. Building takes ~1 min. No-op in
- * in-memory mode.
+ * Create the Atlas Vector Search index on `jev.memories`. Idempotent.
+ * Run once after creating the cluster: `npm run setup:index`.
  */
 import { MongoClient, type Collection, type Document } from 'mongodb';
 import { config, EMBED_DIM, useMongo } from './config.js';
@@ -35,7 +32,7 @@ const waitUntilReady = async (coll: Collection, name: string): Promise<void> => 
   for (;;) {
     const idx = await findIndex(coll, name);
     if (isReady(idx)) {
-      console.log(`✅ Vector index "${name}" is READY.`);
+      console.log(`Vector index "${name}" is READY.`);
       return;
     }
     if (Date.now() - started > READY_TIMEOUT_MS) {
@@ -50,7 +47,7 @@ const waitUntilReady = async (coll: Collection, name: string): Promise<void> => 
 
 export const setupIndex = async (): Promise<void> => {
   if (!useMongo()) {
-    console.log('ℹ️  In-memory mode (no MONGODB_URI): no Atlas index needed. Skipping.');
+    console.log('In-memory mode (no MONGODB_URI): no Atlas index needed.');
     return;
   }
   const client = new MongoClient(config.mongoUri!);
@@ -60,7 +57,7 @@ export const setupIndex = async (): Promise<void> => {
 
     const existing = await findIndex(coll, VECTOR_INDEX);
     if (existing) {
-      console.log(`ℹ️  Vector index "${VECTOR_INDEX}" already exists (${indexStatus(existing)}).`);
+      console.log(`Vector index "${VECTOR_INDEX}" already exists (${indexStatus(existing)}).`);
     } else {
       await coll.createSearchIndex({
         name: VECTOR_INDEX,
@@ -73,7 +70,7 @@ export const setupIndex = async (): Promise<void> => {
           ],
         },
       });
-      console.log(`✅ Created vector index "${VECTOR_INDEX}" on ${config.mongoDb}.memories (${EMBED_DIM} dims).`);
+      console.log(`Created vector index "${VECTOR_INDEX}" on ${config.mongoDb}.memories (${EMBED_DIM} dims).`);
     }
 
     await waitUntilReady(coll, VECTOR_INDEX);

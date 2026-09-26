@@ -1,7 +1,7 @@
 {
   "name": "jev-memory",
   "version": "0.1.0",
-  "description": "Self-improving, MongoDB-backed memory for Strands agents, gated by a type-safe classifier (Jev).",
+  "description": "Jev-gated memory writes: a type-safe classifier decides what to persist.",
   "type": "module",
   "license": "Apache-2.0",
   "engines": {
@@ -9,16 +9,9 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "setup:index": "tsx src/setupIndex.ts",
-    "seed": "tsx src/seed.ts",
-    "reset": "tsx src/seed.ts",
-    "ingest": "tsx src/ingest/worker.ts",
-    "watch": "tsx src/ingest/worker.ts --watch",
-    "demo": "tsx src/demo.ts",
-    "evolve": "tsx src/evolve.ts"
+    "setup:index": "tsx src/setupIndex.ts"
   },
   "dependencies": {
-    "@strands-agents/harness": "^0.1.1",
     "dotenv": "^18.0.4",
     "mongodb": "^7.6.0",
     "openai": "^6.49.0",

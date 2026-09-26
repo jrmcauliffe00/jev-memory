@@ -1,0 +1,12 @@
+{
+  "state": {
+    "text": "Early introduction of peanut in infancy reduces the risk of developing peanut allergy.",
+    "evidence_level": "RCT",
+    "year": 2015
+  },
+  "question": "Is this study worth persisting long-term in the research memory?",
+  "options": [
+    { "label": "A", "key": "yes", "description": "Yes." },
+    { "label": "B", "key": "no", "description": "No." }
+  ]
+}
