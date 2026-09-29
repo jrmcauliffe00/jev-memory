@@ -1,7 +1,7 @@
 {
   "name": "jev-memory",
   "version": "0.1.0",
-  "description": "Jev-gated memory writes: a type-safe classifier decides what to persist.",
+  "description": "Classifier integrations for Strands harness agents: tools, gated memory, and more.",
   "type": "module",
   "license": "Apache-2.0",
   "engines": {
@@ -16,6 +16,14 @@
     "mongodb": "^7.6.0",
     "openai": "^6.49.0",
     "zod": "^4.6.5"
+  },
+  "peerDependencies": {
+    "@strands-agents/harness": "*",
+    "@strands-agents/sdk": "*"
+  },
+  "peerDependenciesMeta": {
+    "@strands-agents/harness": { "optional": true },
+    "@strands-agents/sdk": { "optional": true }
   },
   "devDependencies": {
     "@types/node": "^26.6.3",

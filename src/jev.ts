@@ -15,6 +15,7 @@
  *   - STUB   — neither; deterministic fallback so writes never block on the model
  */
 import { z } from 'zod';
+import { confidenceFromLogprobs } from './confidence.js';
 import { config, useLiveJev, useLocalJev } from './config.js';
 
 export interface Option {
@@ -40,6 +41,11 @@ export interface ClassifyResult<K extends string> {
   latencyMs: number;
   stub: boolean;
   logprobs: unknown;
+  /**
+   * Probability of the chosen label in [0, 1], or `null` when unknown
+   * (stub / missing logprobs). Use `callIfConfident` to gate side effects.
+   */
+  confidence: number | null;
 }
 
 function validateTask(question: string, options: readonly Option[]): void {
@@ -89,6 +95,7 @@ export async function classifyDetailed<const O extends readonly Option[]>(
     latencyMs: Date.now() - start,
     stub: !useLiveJev(),
     logprobs: null,
+    confidence: null,
   });
 
   if (!useLiveJev()) {
@@ -99,6 +106,8 @@ export async function classifyDetailed<const O extends readonly Option[]>(
       latencyMs: Date.now() - start,
       stub: true,
       logprobs: null,
+      // Stub has no calibrated probability — gated callers must set missingConfidence.
+      confidence: null,
     };
   }
 
@@ -113,6 +122,7 @@ export async function classifyDetailed<const O extends readonly Option[]>(
         latencyMs: Date.now() - start,
         stub: false,
         logprobs,
+        confidence: confidenceFromLogprobs(logprobs, chosen.label),
       };
     } catch (err) {
       if (attempt === 1) {

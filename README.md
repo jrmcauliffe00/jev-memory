@@ -1,33 +1,38 @@
 # jev-memory
 
-Jev gates what the [Strands](https://strandsagents.com) harness writes to memory. Accepted text is embedded and stored in Mongo; recall is Atlas Vector Search over `active` rows only.
+Closed-set classifier (Jev) for [Strands](https://strandsagents.com) harnesses. Two seams:
 
-**Write:** harness `add` → Jev (persist? contradict?) → embed → Mongo  
-**Read:** query → embed → `$vectorSearch`
+1. **Memory gate** — only persist when Jev says yes  
+2. **Tool-call gate** — only run a side effect when key + confidence pass  
 
-1. `cp .env.example .env` — set `MONGODB_URI`, `TOGETHER_API_KEY`, `OPENAI_API_KEY`
-2. `npm i && npm run setup:index`
-3. Drop the store into the harness:
+```bash
+npm i jev-memory @strands-agents/harness @strands-agents/sdk
+```
 
 ```ts
 import { createHarness } from '@strands-agents/harness'
-import { JevMemoryStore } from './src/index.js'
+import { tool } from '@strands-agents/sdk'
+import {
+  JevMemoryStore,
+  createJevGatedTool,
+  YES_NO,
+} from 'jev-memory'
 
 const agent = await createHarness({
   memory: { stores: [new JevMemoryStore()] },
+  tools: [
+    tool(
+      createJevGatedTool({
+        name: 'run_if_safe',
+        question: 'Is this action safe to run?',
+        options: YES_NO,
+        acceptKeys: ['yes'],
+        minConfidence: 0.8,
+        call: async ({ state }) => doThing(state),
+      }),
+    ),
+  ],
 })
 ```
 
-Train your own Jev (Together LoRA). Same `{ state, question, options }` contract as `src/jev.ts` — completion is one letter:
-
-```json
-{"state": {"text": "…"}, "question": "Is this worth persisting long-term in the research memory?", "options": [{"label": "A", "key": "yes", "description": "Yes."}, {"label": "B", "key": "no", "description": "No."}], "answer": "A"}
-```
-
-```bash
-cd train && uv sync
-uv run python render_instruction.py
-uv run --env-file .env python train_together.py --launch
-```
-
-Point `TOGETHER_MODEL` at the deployed endpoint. More in [`train/`](train/).
+Set `TOGETHER_API_KEY` (and optionally `MONGODB_URI`). Train: see [`train/`](train/).
